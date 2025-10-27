@@ -458,6 +458,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- RECEIPT GENERATION & PRINTING ---
 
     function generateReceipt(txnData) {
+        // Populate text fields
         document.getElementById('receipt-txn-id').textContent = txnData.id;
         document.getElementById('receipt-name').textContent = txnData.name;
         document.getElementById('receipt-aadhar').textContent = txnData.aadhar;
@@ -466,23 +467,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('receipt-date').textContent = new Date(txnData.date).toLocaleDateString('en-IN');
         document.getElementById('receipt-time').textContent = txnData.time;
         
+        // --- QR CODE FIX ---
+        // Always clear the container's HTML content first.
+        // This removes the old QR code (or blank space) completely.
         qrCodeContainer.innerHTML = '';
+        
         const qrText = `TxnID: ${txnData.id}, Name: ${txnData.name}, Amount: ${txnData.amount}, Date: ${txnData.date}`;
         
-        if (qrCodeInstance) {
-            qrCodeInstance.clear();
-            qrCodeInstance.makeCode(qrText);
-        } else {
-            qrCodeInstance = new QRCode(qrCodeContainer, {
-                text: qrText,
-                width: 120,
-                height: 120,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
+        // Always create a NEW QRCode instance.
+        // This is the most reliable way to ensure it renders on reprints.
+        qrCodeInstance = new QRCode(qrCodeContainer, {
+            text: qrText,
+            width: 120,
+            height: 120,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        // --- END OF FIX ---
         
+        // Show the receipt modal
         receiptModal.classList.add('active');
     }
 
