@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JJM Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body class="dashboard-page-body">
+
+    <header class="header">
+        <div class="header-left">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizFxJ1gqNhQyOWzaiURZxSnpDqxjb-EVegXW4c9rds07OovRo6xhJJ57Rtfjojg4m9ZbuZTPnaHizUD59UkibOtbIbdfb5EA8JRKzl-89HZWyGla531_PLXpteSYKjCjYNV2vRQzXZvBXGBSTS7R9HaoOYxt3WzTRpiwZsMI8_FmBYxWJ0X2H53ObPLQ/s500/10518.png" alt="Logo" class="logo-small">
+            <span class="system-name">MUGKUCHI(2) JAL JEEVAN MISSION</span>
+        </div>
+        <div class="header-right">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8rYcMPXfLxAhl7pvTSsd4hPBU-fNciahK9ai_2nqliVjrTb2CxVlGrLX9gmwzPGsb0muj2D18CFKxOpoJ9UkAQxv6qJ6F4Y6U31p8idqtEzf8jXcGajIUEEKgmhynPjSzFSvgIqyxJnv-P8wnJaV2CYj4UNrWRL0s200lLHAqRdx9Ize3AraL77nGnA/s1156/10923.jpg" alt="Admin" class="admin-photo">
+            <div class="admin-info">
+                <span>mridulbaishya216@gmail.com</span>
+                <button id="logout-btn" class="btn-logout">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <button class="nav-btn" data-page="main-dashboard">
+            <span class="icon">&#128202;</span> Dashboard
+        </button>
+        <button class="nav-btn" data-page="main-add-member">
+            <span class="icon">&#128100;</span> Add New Member
+        </button>
+        <button class="nav-btn" data-page="main-fees-collection">
+            <span class="icon">&#8377;</span> Fees Collection
+        </button>
+        <button class="nav-btn" data-page="main-transactions">
+            <span class="icon">&#128179;</span> Transactions
+        </button>
+        <button class="nav-btn" data-page="main-view-receipts">
+            <span class="icon">&#128424;</span> View Receipts
+        </button>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="main-dashboard" class="main-page">
+            <h2>Administrator Dashboard</h2>
+            <div class="stats-container">
+                <div class="stat-card blue">
+                    <h4>Total Members</h4>
+                    <p id="stat-total-members">0</p>
+                </div>
+                <div class="stat-card green">
+                    <h4>Monthly Collection</h4>
+                    <p id="stat-monthly-collection">₹0</p>
+                </div>
+                <div class="stat-card orange">
+                    <h4>Total Fees Collection</h4>
+                    <p id="stat-total-collection">₹0</p>
+                </div>
+                <div class="stat-card red">
+                    <h4>Dues Pending</h4>
+                    <p id="stat-dues-pending">₹0</p>
+                </div>
+            </div>
+            <div class="graphics-container">
+                <div class="chart-box">
+                    <h4>Monthly Collections (Last 6 Months)</h4>
+                    <div class="chart" id="bar-chart-container">
+                        </div>
+                </div>
+                <div class="chart-box">
+                    <h4>Member Status</h4>
+                    <div class="pie-chart" id="pie-chart-container" style="background: #eee;"></div>
+                    <ul class="pie-legend" id="pie-legend-container">
+                        </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-add-member" class="main-page">
+            <h2>Add New Member</h2>
+            <form id="add-member-form" class="form-layout">
+                <div class="input-group">
+                    <label for="member-name">Name</label>
+                    <input type="text" id="member-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="member-aadhar">Aadhar Number</label>
+                    <input type="text" id="member-aadhar" required maxlength="12">
+                    <p id="aadhar-error" class="error-msg"></p>
+                </div>
+                <div class="input-group">
+                    <label for="member-phone">Phone Number</label>
+                    <input type="text" id="member-phone" required maxlength="10">
+                    <p id="phone-error" class="error-msg"></p>
+                </div>
+                <button type="submit" class="btn">Add Member</button>
+                <p id="add-member-success" class="success-msg"></p>
+            </form>
+            
+            <h3>Manage Existing Members</h3>
+            <div class="search-bar">
+                <input type="text" id="search-edit-member" placeholder="Search by Name or Aadhar...">
+            </div>
+            <div id="member-list-edit">
+                </div>
+        </div>
+
+        <div id="main-fees-collection" class="main-page">
+            <h2>Fees Collection</h2>
+            <div class="search-bar">
+                <input type="text" id="search-member-fees" placeholder="Search by Name or Aadhar Number...">
+            </div>
+            <div id="fees-member-list" class="member-list">
+                </div>
+
+            <div id="payment-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-payment-modal">&times;</span>
+                    <h3 id="payment-member-name">Collect Fees for [Member Name]</h3>
+                    <p>Last Payment Received: <strong id="last-payment-month">N/A</strong></p>
+                    <p>Total Months Due: <strong id="months-due">0</strong></p>
+                    <hr>
+                    <div class="input-group">
+                        <label>Select Months to Pay:</label>
+                        <div id="months-checkbox-container" class="months-grid">
+                            </div>
+                    </div>
+                    <div class="input-group">
+                        <h4>Total Amount: <span id="total-amount">₹0</span></h4>
+                    </div>
+                    <button id="process-payment-btn" class="btn">Pay Now</button>
+                    <p id="payment-success" class="success-msg"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-transactions" class="main-page">
+            <h2>All Transactions</h2>
+            <div class="search-bar">
+                <input type="text" id="search-transactions" placeholder="Search Transactions...">
+            </div>
+            <div class="table-container">
+                <table id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Name</th>
+                            <th>Aadhar</th>
+                            <th>Amount</th>
+                            <th>Months Paid</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="main-view-receipts" class="main-page">
+            <h2>View & Print Receipts</h2>
+            <div class="search-bar filter-bar">
+                <input type="text" id="search-receipts" placeholder="Search by Name, Aadhar, or Txn ID...">
+                <input type="month" id="filter-month-year">
+                <input type="date" id="filter-date">
+            </div>
+            <div class="table-container">
+                <table id="receipts-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-printable" id="receipt-content">
+            <div class="receipt-header">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizFxJ1gqNhQyOWzaiURZxSnpDqxjb-EVegXW4c9rds07OovRo6xhJJ57Rtfjojg4m9ZbuZTPnaHizUD59UkibOtbIbdfb5EA8JRKzl-89HZWyGla531_PLXpteSYKjCjYNV2vRQzXZvBXGBSTS7R9HaoOYxt3WzTRpiwZsMI8_FmBYxWJ0X2H53ObPLQ/s500/10518.png" alt="Logo" class="logo">
+                <h3>MUGKUCHI(2) JAL JEEVAN MISSION</h3>
+                <p>Village : Mugkuchi , Post Office - Mugkuchi</p>
+                <p>District : Nalbari, State : Assam, PIN : 781334</p>
+            </div>
+            
+            <h4>Online Generate Payment Receipt</h4>
+            
+            <table class="receipt-details">
+                <tr>
+                    <td><strong>Transaction ID:</strong></td>
+                    <td id="receipt-txn-id"></td>
+                </tr>
+                <tr>
+                    <td><strong>Member name:</strong></td>
+                    <td id="receipt-name"></td>
+                </tr>
+                <tr>
+                    <td><strong>Aadhar No:</strong></td>
+                    <td id="receipt-aadhar"></td>
+                </tr>
+                <tr>
+                    <td><strong>Payment Month:</strong></td>
+                    <td id="receipt-months"></td>
+                </tr>
+                <tr>
+                    <td><strong>Payment Amount:</strong></td>
+                    <td id="receipt-amount"></td>
+                </tr>
+                <tr>
+                    <td><strong>Payment date:</strong></td>
+                    <td id="receipt-date"></td>
+                </tr>
+                <tr>
+                    <td><strong>Payment time:</strong></td>
+                    <td id="receipt-time"></td>
+                </tr>
+            </table>
+            
+            <div class="receipt-footer">
+                <div id="receipt-qrcode"></div>
+                <p>This is an online generated Payment Receipt so no physical signature is required.</p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button id="print-receipt-btn" class="btn">Print Receipt</button>
+            <button id="close-receipt-modal" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+    <div id="loader" class="loader"></div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
