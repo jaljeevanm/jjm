@@ -15,16 +15,21 @@
 body {
     font-family: var(--font-family);
     margin: 0;
-    background-color: var(--light-color);
     color: var(--dark-color);
 }
 
-.page {
-    display: none;
+/* --- Style for Login Page (index.html) --- */
+body.login-page-body {
+    background-color: var(--white-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.page.active {
-    display: block;
+/* --- Style for Dashboard Page (dashboard.html) --- */
+body.dashboard-page-body {
+    background-color: var(--light-color);
 }
 
 .btn {
@@ -83,15 +88,7 @@ body {
     display: none; /* Hidden by default */
 }
 
-/* --- Login Page --- */
-#page-login {
-    background-color: var(--white-color);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
+/* --- Login Page Container --- */
 .login-container {
     background-color: var(--white-color);
     padding: 2rem;
@@ -615,7 +612,11 @@ tbody tr:hover {
 
     .main-content {
         margin-left: 0;
-        padding: 20px;
+        padding-top: 20px; /* Removed extra padding */
+    }
+    
+    body.dashboard-page-body .main-content {
+        padding: 20px; /* Reset padding for dashboard on mobile */
     }
 
     .stats-container {
@@ -638,7 +639,7 @@ tbody tr:hover {
     body {
         background-color: var(--white-color);
     }
-    #page-dashboard, .modal-actions, .close-btn {
+    .header, .sidebar, .main-content, .modal-actions, .close-btn {
         display: none !important;
     }
     #receipt-modal {
